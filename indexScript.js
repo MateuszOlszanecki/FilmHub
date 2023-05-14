@@ -8,3 +8,6 @@ addFilm.addEventListener('click', () => {
 listFilm.addEventListener('click', () => {
     document.location.href = "listFilm.html"
 })
+
+
+document.location.href = "addFilm.html"
