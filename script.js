@@ -35,7 +35,6 @@ submit.addEventListener('click', () => {
 
     push(filmsInDB, newFilm)
 
-    console.log(`${filmNameValue} added to database`)
     clearInput()
 })
 
@@ -43,12 +42,21 @@ onValue(filmsInDB, function(snapshot) {
     clearFilmList()
     let list = Object.values(snapshot.toJSON())
     list.forEach(i => {
-        appendToFilmList(i.filmName)
+        appendToFilmList(i)
     });
 })
 
-function appendToFilmList(filmValue){
-    filmList.innerHTML += `<li>${filmValue}</li>`
+function appendToFilmList(newFilm){
+    let innerHTMLString = `<li>
+                            ${newFilm.filmName}
+                           <input type="checkbox"`
+    if(newFilm.watched){
+        innerHTMLString += " checked></li>"
+    }
+    else{
+        innerHTMLString += "></li>"
+    }
+    filmList.innerHTML += innerHTMLString             
 }
 
 function clearFilmList(){
