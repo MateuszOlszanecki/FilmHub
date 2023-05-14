@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"
 
 const firebaseConfig = {
     apiKey: "AIzaSyBCB8WcxWUwOVaQ4KAu_CLFzJGl2HgfekQ",
@@ -16,9 +16,16 @@ const database = getDatabase(app)
 const filmsInDB = ref(database, "films")
 
 const filmName = document.querySelector('.filmName')
+const filmList = document.querySelector('.filmList')
 const submit = document.querySelector('.submit')
 
+function clearInput(){
+    filmName.value = ""
+}
+
 submit.addEventListener('click', () => {
+    if(filmName.value === "") return
+
     let filmNameValue = filmName.value
     let newFilm =
     {
@@ -29,4 +36,21 @@ submit.addEventListener('click', () => {
     push(filmsInDB, newFilm)
 
     console.log(`${filmNameValue} added to database`)
+    clearInput()
 })
+
+onValue(filmsInDB, function(snapshot) {
+    clearFilmList()
+    let list = Object.values(snapshot.toJSON())
+    list.forEach(i => {
+        appendToFilmList(i.filmName)
+    });
+})
+
+function appendToFilmList(filmValue){
+    filmList.innerHTML += `<li>${filmValue}</li>`
+}
+
+function clearFilmList(){
+    filmList.innerHTML = ""
+}
