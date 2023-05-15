@@ -34,14 +34,14 @@ filmName.addEventListener('keypress', e => {
     let filmNameValue = filmName.value
     if(filmListVar){
         filmListVar.forEach(i => {
-            if(filmNameValue.toLowerCase() === i.filmName.toLowerCase()) duplicate = !duplicate
+            if(filmNameValue.toLowerCase() === i.filmName.toLowerCase()){
+                clearInput()
+                alert("This film already exist in the list!")
+                duplicate = true
+            }
         })
-        if(duplicate){
-            clearInput()
-            alert("This film already exist in the list!")
-            return
-        }
     }
+    if(duplicate) return
 
     let newFilm =
     {
