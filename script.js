@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"
-import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"
+import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"
 
 const firebaseConfig = {
     apiKey: "AIzaSyBCB8WcxWUwOVaQ4KAu_CLFzJGl2HgfekQ",
@@ -23,10 +23,24 @@ function clearInput(){
     filmName.value = ""
 }
 
-submit.addEventListener('click', () => {
-    if(filmName.value === "") return
+filmName.addEventListener('keypress', e => {
+    if(e.key !== 'Enter') return
 
+    if(filmName.value === ""){
+        alert("Input is empty!")
+        return
+    }
+    let duplicate = false
     let filmNameValue = filmName.value
+    filmListVar.forEach(i => {
+        if(filmNameValue.toLowerCase() === i.filmName.toLowerCase()) duplicate = !duplicate
+    })
+    if(duplicate){
+        clearInput()
+        alert("This film already exist in the list!")
+        return
+    }
+
     let newFilm =
     {
         filmName: filmNameValue,
@@ -38,11 +52,14 @@ submit.addEventListener('click', () => {
     clearInput()
 })
 
+//list of films
+var filmListVar
+
 onValue(filmsInDB, function(snapshot) {
     clearFilmList()
-    let list = Object.values(snapshot.toJSON())
+    filmListVar = Object.values(snapshot.toJSON())
     let listIds = Object.keys(snapshot.val())
-    list.forEach((obj, i) => {
+    filmListVar.forEach((obj, i) => {
         appendToFilmList(obj, listIds[i])
     })
     giveLogicToFilmElement()
@@ -53,11 +70,13 @@ function appendToFilmList(newFilm, newFilmId){
                             ${newFilm.filmName}
                            <input type="checkbox" class="filmItemCheckbox"`
     if(newFilm.watched){
-        innerHTMLString += " checked></li>"
+        innerHTMLString += " checked>"
     }
     else{
-        innerHTMLString += "></li>"
+        innerHTMLString += ">"
     }
+    innerHTMLString += `<button id="${newFilmId}">X</button>
+                        </li>`
     filmList.innerHTML += innerHTMLString             
 }
 
@@ -67,6 +86,7 @@ function clearFilmList(){
 
 function giveLogicToFilmElement(){
     let filmItem = document.querySelectorAll('.filmItem')
+    let filmItemButton = document.querySelectorAll('.filmItem button')
 
     filmItem.forEach(i => {
         i.addEventListener('change', e => {
@@ -74,6 +94,11 @@ function giveLogicToFilmElement(){
                 watched: e.target.checked
             }
             update(ref(database, `films/${e.currentTarget.id}`), updates)
+        })
+    })
+    filmItemButton.forEach(i => {
+        i.addEventListener('click', e => {
+            remove(ref(database, `films/${e.currentTarget.id}`))
         })
     })
 }
