@@ -33,10 +33,11 @@ filmName.addEventListener('keypress', e => {
     let duplicate = false
     let filmNameValue = filmName.value
     if(filmListVar){
-        filmListVar.forEach(i => {
+        filmListVar.forEach((i, iterator) => {
             if(filmNameValue.toLowerCase() === i.filmName.toLowerCase()){
                 clearInput()
-                alert("This film already exist in the list!")
+                window.scrollTo(0, filmItem[iterator].offsetTop - 5)
+                alert("Searching is successful!")
                 duplicate = true
             }
         })
@@ -50,7 +51,8 @@ filmName.addEventListener('keypress', e => {
     }
 
     push(filmsInDB, newFilm)
-
+    window.scrollTo(0, filmItem[filmItem.length - 1].offsetTop - 5)
+    alert("New film added!")
     clearInput()
 })
 
@@ -77,7 +79,7 @@ function appendToFilmList(newFilm, newFilmId){
     else{
         innerHTMLString += ">"
     }
-    innerHTMLString += `<button id="${newFilmId}">X</button>
+    innerHTMLString += `<button id="${newFilmId}">Remove</button>
                         </li>`
     filmList.innerHTML += innerHTMLString             
 }
@@ -86,8 +88,10 @@ function clearFilmList(){
     filmList.innerHTML = ""
 }
 
+var filmItem
+
 function giveLogicToFilmElement(){
-    let filmItem = document.querySelectorAll('.filmItem')
+    filmItem = document.querySelectorAll('.filmItem')
     let filmItemButton = document.querySelectorAll('.filmItem button')
 
     filmItem.forEach(i => {
