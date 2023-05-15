@@ -5,6 +5,11 @@
 
 body {
     display: grid;
+    background: lightblue;
+}
+
+.gui {
+    display: none;
 }
 
 .appName {

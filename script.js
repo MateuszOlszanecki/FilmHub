@@ -67,6 +67,7 @@ onValue(filmsInDB, function(snapshot) {
         appendToFilmList(obj, listIds[i])
     })
     giveLogicToFilmElement()
+    document.querySelector('.gui').style.display = 'grid'
 })
 
 function appendToFilmList(newFilm, newFilmId){
