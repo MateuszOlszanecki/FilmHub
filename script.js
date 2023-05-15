@@ -17,7 +17,6 @@ const filmsInDB = ref(database, "films")
 
 const filmName = document.querySelector('.filmName')
 const filmList = document.querySelector('.filmList')
-const submit = document.querySelector('.submit')
 
 function clearInput(){
     filmName.value = ""
@@ -36,7 +35,7 @@ filmName.addEventListener('keypress', e => {
         filmListVar.forEach((i, iterator) => {
             if(filmNameValue.toLowerCase() === i.filmName.toLowerCase()){
                 clearInput()
-                window.scrollTo(0, filmItem[iterator].offsetTop - 5)
+                window.scrollTo(0, filmItem[iterator].offsetTop)
                 alert("Searching is successful!")
                 duplicate = true
             }
@@ -51,7 +50,7 @@ filmName.addEventListener('keypress', e => {
     }
 
     push(filmsInDB, newFilm)
-    window.scrollTo(0, filmItem[filmItem.length - 1].offsetTop - 5)
+    window.scrollTo(0, filmItem[filmItem.length - 1].offsetTop)
     alert("New film added!")
     clearInput()
 })

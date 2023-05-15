@@ -1,11 +1,14 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    --color1: #1E4174;
+    --color2: #DDA94B;
 }
 
 body {
     display: grid;
-    background: lightblue;
+    background: var(--color1);
 }
 
 .gui {
@@ -14,7 +17,10 @@ body {
 
 .appName {
     text-align: center;
-    font-size: 50px;
+    font-size: 60px;
+    color: var(--color2);
+    font-weight: bold;
+    text-shadow: 4px 4px 6px rgba(255, 255, 255, 0.4);
 }
 
 .filmList {
@@ -27,20 +33,33 @@ body {
     margin-left: 5px;
     margin-right: 5px;
     font-size: 26px;
+    height: 50px;
     margin-bottom: 20px;
+    background: var(--color2);
+    color: var(--color1);
+    border: none;
+    border-radius: 10px;
+    padding-left: 5px;
 }
 
 .filmItem {
     font-size: 26px;
-    height: 100px;
+    min-height: 100px;
     padding-left: 5px;
     padding-right: 5px;
     border-radius: 10px;
     align-items: center;
     margin: 5px;
-    background: greenyellow;
+    background: var(--color2);
+    color: var(--color1);
     display: grid;
     grid-template-columns: auto 30px 80px;
+}
+
+.filmItem button {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--color1);
 }
 
 .filmItem input, .filmItem button {
