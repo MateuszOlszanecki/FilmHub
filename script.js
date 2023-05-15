@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"
+import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"
 
 const firebaseConfig = {
     apiKey: "AIzaSyBCB8WcxWUwOVaQ4KAu_CLFzJGl2HgfekQ",
@@ -41,15 +41,17 @@ submit.addEventListener('click', () => {
 onValue(filmsInDB, function(snapshot) {
     clearFilmList()
     let list = Object.values(snapshot.toJSON())
-    list.forEach(i => {
-        appendToFilmList(i)
-    });
+    let listIds = Object.keys(snapshot.val())
+    list.forEach((obj, i) => {
+        appendToFilmList(obj, listIds[i])
+    })
+    giveLogicToFilmElement()
 })
 
-function appendToFilmList(newFilm){
-    let innerHTMLString = `<li>
+function appendToFilmList(newFilm, newFilmId){
+    let innerHTMLString = `<li class="filmItem" id="${newFilmId}">
                             ${newFilm.filmName}
-                           <input type="checkbox"`
+                           <input type="checkbox" class="filmItemCheckbox"`
     if(newFilm.watched){
         innerHTMLString += " checked></li>"
     }
@@ -61,4 +63,17 @@ function appendToFilmList(newFilm){
 
 function clearFilmList(){
     filmList.innerHTML = ""
+}
+
+function giveLogicToFilmElement(){
+    let filmItem = document.querySelectorAll('.filmItem')
+
+    filmItem.forEach(i => {
+        i.addEventListener('change', e => {
+            let updates = {
+                watched: e.target.checked
+            }
+            update(ref(database, `films/${e.currentTarget.id}`), updates)
+        })
+    })
 }
