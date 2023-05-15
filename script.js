@@ -1,6 +1,8 @@
+//import all functions from firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"
 import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"
 
+//this is firebase config for FilmHub database
 const firebaseConfig = {
     apiKey: "AIzaSyBCB8WcxWUwOVaQ4KAu_CLFzJGl2HgfekQ",
     authDomain: "filmhub-5353d.firebaseapp.com",
@@ -11,17 +13,22 @@ const firebaseConfig = {
     appId: "1:1051923199041:web:562960c7d6acdf745142c0"
 }
 
+//firebase constants
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
 const filmsInDB = ref(database, "films")
 
+//all querySelectors
 const filmName = document.querySelector('.filmName')
 const filmList = document.querySelector('.filmList')
 
-function clearInput(){
-    filmName.value = ""
-}
+//list of films in dictionary
+var filmListVar
 
+//all film elements of list, all li elements
+var filmItem
+
+//eventListener that adds new film to database or seraches existing one, by pressing Enter
 filmName.addEventListener('keypress', e => {
     if(e.key !== 'Enter') return
 
@@ -55,9 +62,7 @@ filmName.addEventListener('keypress', e => {
     clearInput()
 })
 
-//list of films
-var filmListVar
-
+//function that takes snapshot of all database records
 onValue(filmsInDB, function(snapshot) {
     clearFilmList()
     filmListVar = Object.values(snapshot.toJSON())
@@ -69,6 +74,7 @@ onValue(filmsInDB, function(snapshot) {
     document.querySelector('.gui').style.display = 'grid'
 })
 
+//function that makes html list that is displayed on the page of all films
 function appendToFilmList(newFilm, newFilmId){
     let innerHTMLString = `<li class="filmItem" id="${newFilmId}">
                             ${newFilm.filmName}
@@ -84,12 +90,7 @@ function appendToFilmList(newFilm, newFilmId){
     filmList.innerHTML += innerHTMLString             
 }
 
-function clearFilmList(){
-    filmList.innerHTML = ""
-}
-
-var filmItem
-
+//function that gives logic to checkboxes and remove buttons in all films tiles
 function giveLogicToFilmElement(){
     filmItem = document.querySelectorAll('.filmItem')
     let filmItemButton = document.querySelectorAll('.filmItem button')
@@ -107,4 +108,14 @@ function giveLogicToFilmElement(){
             remove(ref(database, `films/${e.currentTarget.id}`))
         })
     })
+}
+
+//function that clears input given by user
+function clearInput(){
+    filmName.value = ""
+}
+
+//function that clears whole list of films in html
+function clearFilmList(){
+    filmList.innerHTML = ""
 }
